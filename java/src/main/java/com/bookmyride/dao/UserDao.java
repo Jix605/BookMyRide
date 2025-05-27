@@ -1,7 +1,7 @@
-package com.techelevator.dao;
+package com.bookmyride.dao;
 
-import com.techelevator.model.RegisterUserDto;
-import com.techelevator.model.User;
+import com.bookmyride.model.RegisterUserDto;
+import com.bookmyride.model.User;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface UserDao {
 
     List<User> getUsers();
 
-    User getUserById(int id);
+    User getUserById(String id);
 
     User getUserByUsername(String username);
 

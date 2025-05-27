@@ -1,4 +1,4 @@
-package com.techelevator.model;
+package com.bookmyride.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 /*

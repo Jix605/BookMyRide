@@ -1,11 +1,11 @@
-package com.techelevator.dao;
+package com.bookmyride.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.techelevator.exception.DaoException;
-import com.techelevator.model.RegisterUserDto;
+import com.bookmyride.exception.DaoException;
+import com.bookmyride.model.RegisterUserDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.techelevator.model.User;
+import com.bookmyride.model.User;
 
 @Component
 public class JdbcUserDao implements UserDao {
@@ -25,9 +25,9 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User getUserById(int userId) {
+    public User getUserById(String userId) {
         User user = null;
-        String sql = "SELECT user_id, username, password_hash, role FROM users WHERE user_id = ?";
+        String sql = "SELECT user_id, username, password_hash, role FROM users WHERE user_id = ?::uuid";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
             if (results.next()) {
@@ -78,7 +78,7 @@ public class JdbcUserDao implements UserDao {
         String password_hash = new BCryptPasswordEncoder().encode(user.getPassword());
         String ssRole = user.getRole().toUpperCase().startsWith("ROLE_") ? user.getRole().toUpperCase() : "ROLE_" + user.getRole().toUpperCase();
         try {
-            int newUserId = jdbcTemplate.queryForObject(insertUserSql, int.class, user.getUsername(), password_hash, ssRole);
+            String newUserId = jdbcTemplate.queryForObject(insertUserSql, String.class, user.getUsername(), password_hash, ssRole);
             newUser = getUserById(newUserId);
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
@@ -90,7 +90,7 @@ public class JdbcUserDao implements UserDao {
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
-        user.setId(rs.getInt("user_id"));
+        user.setId(rs.getString("user_id"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password_hash"));
         user.setAuthorities(Objects.requireNonNull(rs.getString("role")));

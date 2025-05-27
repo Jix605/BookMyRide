@@ -1,8 +1,8 @@
-package com.techelevator.dao;
+package com.bookmyride.dao;
 
-import com.techelevator.exception.DaoException;
-import com.techelevator.model.RegisterUserDto;
-import com.techelevator.model.User;
+import com.bookmyride.exception.DaoException;
+import com.bookmyride.model.RegisterUserDto;
+import com.bookmyride.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,9 +12,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JdbcUserDaoTest extends BaseDaoTest {
-    protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER");
-    protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER");
-    private static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER");
+    protected static final User USER_1 = new User("", "user1", "user1", "ROLE_USER");
+    protected static final User USER_2 = new User("", "user2", "user2", "ROLE_USER");
+    private static final User USER_3 = new User("", "user3", "user3", "ROLE_USER");
 
     private JdbcUserDao sut;
 
@@ -48,17 +48,16 @@ public class JdbcUserDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void getUserById_given_invalid_user_id_returns_null() {
-        User actualUser = sut.getUserById(-1);
+    public void getUserById_given_invalid_user_id_errors() {
+        boolean threwError = false;
 
-        assertNull(actualUser);
-    }
+        try {
+            User actualUser = sut.getUserById("-1");
+        } catch (Exception _){
+            threwError = true;
+        }
 
-    @Test
-    public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId());
-
-        assertEquals(USER_1, actualUser);
+        assertTrue(threwError);
     }
 
     @Test

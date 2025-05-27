@@ -1,4 +1,4 @@
-package com.techelevator.model;
+package com.bookmyride.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class User {
 
-   private int id;
+   private String id;
    private String username;
    @JsonIgnore
    private String password;
@@ -18,7 +18,7 @@ public class User {
 
    public User() { }
 
-   public User(int id, String username, String password, String authorities) {
+   public User(String id, String username, String password, String authorities) {
       this.id = id;
       this.username = username;
       this.password = password;
@@ -26,11 +26,11 @@ public class User {
       this.activated = true;
    }
 
-   public int getId() {
+   public String getId() {
       return id;
    }
 
-   public void setId(int id) {
+   public void setId(String id) {
       this.id = id;
    }
 
@@ -79,8 +79,7 @@ public class User {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       User user = (User) o;
-      return id == user.id &&
-              activated == user.activated &&
+      return activated == user.activated &&
               Objects.equals(username, user.username) &&
               Objects.equals(password, user.password) &&
               Objects.equals(authorities, user.authorities);
